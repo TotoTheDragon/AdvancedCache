@@ -1,0 +1,30 @@
+{
+  "name": "@developerdragon/advancedcache",
+  "version": "1.0.2",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/TotoTheDragon/AdvancedCache.git"
+  },
+  "author": "DeveloperDragon <mrdragonplays2683@gmail.com> (http://developerdragon.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TotoTheDragon/AdvancedCache/issues"
+  },
+  "homepage": "https://github.com/TotoTheDragon/AdvancedCache#readme",
+  "dependencies": {
+    "moment": "^2.29.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.33"
+  },
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/index.d.ts",
+    "lib/index.js"
+  ]
+}
