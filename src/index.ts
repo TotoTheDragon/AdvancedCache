@@ -57,7 +57,6 @@ export class Cache<T> {
     add(key: string, object: T | Promise<T>) {
         /* Handle if object is promise */
         if (object instanceof Promise) {
-            console.log("Passed promised");
             this.pending.set(key, object);
             this.cacheMeta.set(key, { cachedAt: moment(), validUntil: moment().add(this.cacheDuration) });
             object.then(
