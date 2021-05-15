@@ -51,7 +51,7 @@ export class Cache<T> {
 
     has(key: string): boolean {
         const meta = this.getCacheMeta(key);
-        return meta && (this.cache.has(key) || this.pending.has(key)) && meta.validUntil.isAfter(moment());
+        return Boolean(meta) && (this.cache.has(key) || this.pending.has(key)) && meta.validUntil.isAfter(moment());
     }
 
     add(key: string, object: T | Promise<T>) {
