@@ -12,6 +12,8 @@ export class Cache<T> {
     protected cleanInterval: Duration;
     protected cleanerTask: NodeJS.Timeout;
 
+    protected _limit: number;
+
     constructor(options?: CacheOptions) {
         this.cacheDuration = options?.cacheDuration ?? moment.duration(2, "hour");
 
@@ -20,12 +22,19 @@ export class Cache<T> {
         this.pending = new Map();
 
         this.cleanInterval = options?.autoCleanInterval ?? moment.duration(1, "minute");
+
+        this._limit = options?.limit || -1;
+
         if (options?.autoClean)
             this.startClean();
     }
 
     get size(): number {
         return this.cache.size;
+    }
+
+    get limit(): number {
+        return this._limit;
     }
 
 
@@ -76,6 +85,9 @@ export class Cache<T> {
         /* Handle if object is object */
         this.cache.set(key, object);
         this.cacheMeta.set(key, { cachedAt: moment(), validUntil: moment().add(this.cacheDuration) });
+
+        if (this.limit > 0 && this.size > this.limit)
+            this.removeUntilLimit();
     }
 
     remove(key: string): void {
@@ -95,6 +107,16 @@ export class Cache<T> {
             if (meta.validUntil.isBefore(moment()))
                 this.remove(key);
         });
+        if (this.limit > 0 && this.size > this.limit)
+            this.removeUntilLimit();
+    }
+
+    removeUntilLimit(): void {
+        Array
+            .from(this.cacheMeta.entries())
+            .sort((a, b) => a[1].cachedAt.unix() - b[1].cachedAt.unix())
+            .slice(0, this.size - this.limit)
+            .forEach(x => this.remove(x[0]));
     }
 
     protected startClean() {
@@ -119,6 +141,7 @@ export interface CacheOptions {
     cacheDuration?: Duration;
     autoClean?: boolean;
     autoCleanInterval?: Duration;
+    limit?: number;
 }
 
 export interface CacheMeta {
